@@ -42,7 +42,11 @@ function listAncestorDirs(startDir) {
   return dirs.reverse();
 }
 
-function candidateDirs(startDir) {
+function candidateDirs(startDir, discoveryEnabled = true) {
+  if (!discoveryEnabled) {
+    return [path.resolve(startDir)];
+  }
+
   const ancestors = listAncestorDirs(startDir);
   const seen = new Set();
   const dirs = [];
@@ -70,17 +74,9 @@ function loadEnvFiles(startDir) {
   const bootstrapDiscovery = readDiscoveryPreference(startDir, process.env.ENV_DISCOVERY);
   const discoveryEnabled = readBool(bootstrapDiscovery, true);
 
-  if (!discoveryEnabled) {
-    return {
-      enabled: false,
-      files: [],
-      sourcesByKey: {},
-    };
-  }
-
   const filenames = [".env", ".env.local"];
 
-  for (const dir of candidateDirs(startDir)) {
+  for (const dir of candidateDirs(startDir, discoveryEnabled)) {
     for (const filename of filenames) {
       const filePath = path.join(dir, filename);
       if (!fs.existsSync(filePath)) continue;
@@ -106,7 +102,7 @@ function loadEnvFiles(startDir) {
   }
 
   return {
-    enabled: true,
+    enabled: discoveryEnabled,
     files: loadedFiles,
     sourcesByKey,
   };
