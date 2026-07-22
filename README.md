@@ -6,29 +6,15 @@
 [![Telegram](https://img.shields.io/badge/alerts-Telegram-2563eb.svg)](https://telegram.org/)
 [![Live Bot](https://img.shields.io/badge/live%20bot-@NOXA__AlertBot-229ED9.svg)](https://t.me/NOXA_AlertBot)
 
-Open-source website change detection for `https://noxa.fi/` with Telegram alerts, stored snapshots, simple diffs, Docker support, and zero runtime dependencies beyond Node.js.
+Open-source website change detection for `https://noxa.fi/`.
 
-It ships preconfigured for `noxa.fi`, but you can point it at any site and use it as a lightweight launch monitor, landing page watcher, or “tell me the second this page changes” bot.
+It watches the page, stores a baseline, detects real changes, and sends Telegram alerts.
 
 Live public bot: https://t.me/NOXA_AlertBot
 
 ![noxa-site-alert hero](assets/hero.svg)
 
-## Why this exists
-
-Some pages are only interesting exactly once: when they stop saying “coming soon.”
-
-`noxa-site-alert` is built for that moment:
-
-- watch a page every few seconds
-- establish a clean baseline
-- detect meaningful changes
-- alert Telegram instantly
-- preserve snapshots so you can verify what changed
-
-The default target is `noxa.fi`, which makes this repo useful out of the box for anyone tracking that launch, while still being generic enough for other sites.
-
-## What you get
+## Features
 
 - preconfigured for `https://noxa.fi/`
 - instant Telegram alerts on content change
@@ -42,7 +28,7 @@ The default target is `noxa.fi`, which makes this repo useful out of the box for
 - tiny-VPS-friendly `systemd` deploy path
 - zero third-party runtime dependencies
 
-## How it works
+## Flow
 
 ![noxa-site-alert flow](assets/flow.svg)
 
@@ -53,11 +39,16 @@ The default target is `noxa.fi`, which makes this repo useful out of the box for
 
 ## Quick start
 
-### 1. Clone and configure
+### 1. Clone
 
 ```bash
 git clone https://github.com/Semak12345/noxa-site-alert.git
 cd noxa-site-alert
+```
+
+### 2. Configure
+
+```bash
 cp .env.example .env
 ```
 
@@ -71,7 +62,7 @@ Optional:
 - `TELEGRAM_THREAD_ID` for a Telegram forum topic
 - `IGNORE_HTML_REGEX` or `IGNORE_TEXT_REGEX` if the page has noisy changing fragments
 
-### 2. Create the first baseline
+### 3. Create the first baseline
 
 ```bash
 npm install
@@ -80,7 +71,7 @@ npm run init
 
 This stores the current version of the page without sending an alert.
 
-### 3. Start the watcher
+### 4. Start the watcher
 
 ```bash
 npm start
@@ -88,17 +79,18 @@ npm start
 
 Default polling interval is `10000ms`.
 
-### 4. Subscribe from Telegram
+### 5. Subscribe in Telegram
 
 Open the live bot and press `Start`:
 
 https://t.me/NOXA_AlertBot
 
-From that point:
+You will get:
 
-- you receive change alerts
-- you receive outage and recovery alerts
-- you can send `/stop` to unsubscribe
+- a confirmation that you are on the alert list
+- change alerts for `noxa.fi`
+- outage and recovery alerts
+- `/stop` support to unsubscribe
 
 ## Example alert
 
@@ -202,7 +194,7 @@ Practical advice:
 - keep rules narrow so you do not hide real changes
 - run `npm run check` after each tuning change
 
-## Snapshots
+## State and snapshots
 
 State is stored in:
 
@@ -229,8 +221,9 @@ This gives you:
 1. Create a bot with `@BotFather`
 2. Put the token into `.env`
 3. Run `npm run test-alert`
-4. If you want a fixed group destination, add `TELEGRAM_CHAT_ID`
+4. If you want a fixed admin or group destination, add `TELEGRAM_CHAT_ID`
 5. If you want public opt-in alerts, let users press `Start`
+6. When a user presses `Start`, the bot confirms the subscription in English
 
 ## Docker
 

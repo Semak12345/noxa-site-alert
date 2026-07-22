@@ -42,6 +42,7 @@ async function getTelegramUpdates(config, offset) {
   return telegramRequest(config, "getUpdates", {
     offset,
     timeout: 0,
+    limit: 100,
     allowed_updates: ["message"],
   });
 }
@@ -64,6 +65,8 @@ async function syncSubscribers(config, subscribers) {
   };
   const added = [];
   const removed = [];
+  const confirmed = [];
+  const unsubscribed = [];
 
   for (const update of updates) {
     if (typeof update.update_id === "number" && update.update_id > next.lastUpdateId) {
@@ -99,6 +102,7 @@ async function syncSubscribers(config, subscribers) {
         active: true,
         addedAt: existing.addedAt || new Date().toISOString(),
       };
+      confirmed.push(next.chats[chatId]);
 
       if (!wasActive) {
         added.push(next.chats[chatId]);
@@ -106,18 +110,20 @@ async function syncSubscribers(config, subscribers) {
     }
 
     if (command === "/stop") {
+      next.chats[chatId] = {
+        ...chatRecord,
+        active: false,
+        addedAt: existing.addedAt || new Date().toISOString(),
+      };
+      unsubscribed.push(next.chats[chatId]);
+
       if (existing && existing.active) {
-        next.chats[chatId] = {
-          ...chatRecord,
-          active: false,
-          addedAt: existing.addedAt || new Date().toISOString(),
-        };
         removed.push(next.chats[chatId]);
       }
     }
   }
 
-  for (const chat of added) {
+  for (const chat of confirmed) {
     await sendTelegramMessage(
       config,
       chat.chatId,
@@ -131,7 +137,7 @@ async function syncSubscribers(config, subscribers) {
     );
   }
 
-  for (const chat of removed) {
+  for (const chat of unsubscribed) {
     await sendTelegramMessage(
       config,
       chat.chatId,
@@ -147,6 +153,8 @@ async function syncSubscribers(config, subscribers) {
     subscribers: next,
     added,
     removed,
+    confirmed,
+    unsubscribed,
   };
 }
 
