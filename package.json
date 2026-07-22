@@ -1,0 +1,27 @@
+{
+  "name": "noxa-site-alert",
+  "version": "1.0.0",
+  "description": "Open-source website change monitor for noxa.fi with Telegram alerts, snapshots, diffs, and zero-runtime dependencies.",
+  "license": "MIT",
+  "private": false,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js watch",
+    "watch": "node src/index.js watch",
+    "init": "node src/index.js init",
+    "check": "node src/index.js check",
+    "doctor": "node src/index.js doctor",
+    "test-alert": "node src/index.js test-alert"
+  },
+  "keywords": [
+    "telegram",
+    "website-monitor",
+    "change-detection",
+    "noxa",
+    "alerts",
+    "opensource"
+  ]
+}

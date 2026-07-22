@@ -1,0 +1,16 @@
+[Unit]
+Description=noxa-site-alert website watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/noxa-site-alert
+ExecStart=/usr/bin/node /opt/noxa-site-alert/src/index.js watch
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

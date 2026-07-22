@@ -1,0 +1,9 @@
+services:
+  noxa-site-alert:
+    build: .
+    container_name: noxa-site-alert
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./.data:/app/.data
