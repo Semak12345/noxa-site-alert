@@ -1,0 +1,18 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="300" rx="24" fill="#07111F"/>
+  <rect x="36" y="78" width="232" height="144" rx="18" fill="#0E1F32" stroke="#214563"/>
+  <rect x="328" y="78" width="232" height="144" rx="18" fill="#0E1F32" stroke="#214563"/>
+  <rect x="620" y="78" width="232" height="144" rx="18" fill="#0E1F32" stroke="#214563"/>
+  <rect x="912" y="78" width="252" height="144" rx="18" fill="#0E1F32" stroke="#214563"/>
+  <text x="66" y="132" fill="#8DBBFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">1. Fetch page</text>
+  <text x="66" y="170" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18">Poll every few seconds</text>
+  <text x="358" y="132" fill="#8DBBFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">2. Normalize noise</text>
+  <text x="358" y="170" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18">Strip scripts, styles, regex ignores</text>
+  <text x="650" y="132" fill="#8DBBFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">3. Compare hashes</text>
+  <text x="650" y="170" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18">DOM, text, or raw HTML mode</text>
+  <text x="942" y="132" fill="#8DBBFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">4. Broadcast alert</text>
+  <text x="942" y="170" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="18">Telegram subscribers + snapshots</text>
+  <path d="M268 150H328" stroke="#4A95E8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M560 150H620" stroke="#4A95E8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M852 150H912" stroke="#4A95E8" stroke-width="6" stroke-linecap="round"/>
+</svg>

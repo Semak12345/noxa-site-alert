@@ -18,8 +18,11 @@
   },
   "keywords": [
     "telegram",
+    "telegram-bot",
     "website-monitor",
     "change-detection",
+    "launch-monitor",
+    "uptime",
     "noxa",
     "alerts",
     "opensource"

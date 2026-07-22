@@ -1,4 +1,5 @@
 const { sha256 } = require("./hash");
+const { applyRegexReplacements } = require("./normalize");
 
 function stripVolatileHtml(html) {
   return String(html || "")
@@ -58,14 +59,20 @@ async function fetchSite(config) {
       signal: controller.signal,
       redirect: "follow",
       headers: {
-        "user-agent": "noxa-site-alert/1.0 (+https://github.com/your-org/noxa-site-alert)",
+        "user-agent": "noxa-site-alert/1.0 (+https://github.com/Semak12345/noxa-site-alert)",
         accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
     });
 
     const html = await response.text();
-    const normalizedHtml = stripVolatileHtml(html);
-    const text = htmlToText(html);
+    const normalizedHtml = applyRegexReplacements(
+      stripVolatileHtml(html),
+      config.ignoreHtmlRegexes
+    );
+    const text = applyRegexReplacements(
+      htmlToText(html),
+      config.ignoreTextRegexes
+    );
     const normalizedText = text.replace(/\s+/g, " ").trim();
     const title = extractTitle(html);
 
