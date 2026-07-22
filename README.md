@@ -1,50 +1,25 @@
 # noxa-site-alert
 
-[![CI](https://github.com/Semak12345/noxa-site-alert/actions/workflows/ci.yml/badge.svg)](https://github.com/Semak12345/noxa-site-alert/actions/workflows/ci.yml)
-[![MIT License](https://img.shields.io/badge/license-MIT-7c3aed.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-0f172a.svg)](package.json)
-[![Telegram](https://img.shields.io/badge/alerts-Telegram-2563eb.svg)](https://t.me/NOXA_AlertBot)
-[![Live Bot](https://img.shields.io/badge/live%20bot-@NOXA__AlertBot-229ED9.svg)](https://t.me/NOXA_AlertBot)
-
-Open-source website change monitoring for `https://noxa.fi/`.
-
-It stores a baseline, checks the page on a schedule, and sends Telegram alerts when the site changes.
+Website change alerts for `https://noxa.fi/`.
 
 Public bot: [@NOXA_AlertBot](https://t.me/NOXA_AlertBot)
 
-![noxa-site-alert hero](assets/hero.svg)
+[CI](https://github.com/Semak12345/noxa-site-alert/actions/workflows/ci.yml)  
+[License: MIT](LICENSE)  
+[Node >= 18](package.json)
 
-## What it does
+## Overview
+
+This project:
 
 - watches `https://noxa.fi/`
-- keeps HTML and text snapshots
-- alerts every Telegram user who pressed `/start`
-- supports fixed admin/group delivery through `TELEGRAM_CHAT_ID`
-- supports noise filtering for unstable pages
-- runs on a small VPS, Docker, or any Node.js host
+- stores a baseline
+- checks for changes on a timer
+- sends Telegram alerts
+- supports `/start` and `/stop`
+- keeps local snapshots in `.data/`
 
-## Features
-
-- preconfigured for `https://noxa.fi/`
-- instant Telegram alerts on content change
-- self-service subscriptions through `/start`
-- local HTML and text snapshots for auditability
-- three watch modes: `dom`, `text`, `html`
-- fetch error and recovery alerts
-- optional regex-based noise filtering for false positives
-- automatic `.env` discovery for monorepos
-- Docker and `docker-compose` support
-- tiny-VPS-friendly `systemd` deploy path
-- zero third-party runtime dependencies
-
-## Flow
-
-![noxa-site-alert flow](assets/flow.svg)
-
-1. Fetch the target page
-2. Normalize noisy markup
-3. Compare hashes against the stored baseline
-4. Broadcast a Telegram alert and save snapshots if something changed
+It is small, simple, and VPS-friendly.
 
 ## Quick start
 
@@ -61,45 +36,51 @@ cd noxa-site-alert
 cp .env.example .env
 ```
 
-Set at minimum:
+Required:
 
 - `TELEGRAM_BOT_TOKEN`
 
 Optional:
 
-- `TELEGRAM_CHAT_ID` for one fixed admin/group destination
-- `TELEGRAM_THREAD_ID` for a Telegram forum topic
-- `IGNORE_HTML_REGEX` or `IGNORE_TEXT_REGEX` if the page has noisy changing fragments
+- `TELEGRAM_CHAT_ID`
+- `TELEGRAM_THREAD_ID`
+- `IGNORE_HTML_REGEX`
+- `IGNORE_TEXT_REGEX`
 
-### 3. Create the first baseline
+### 3. Install
 
 ```bash
 npm install
+```
+
+### 4. Save baseline
+
+```bash
 npm run init
 ```
 
-This stores the current version of the page without sending an alert.
-
-### 4. Start the watcher
+### 5. Start watcher
 
 ```bash
 npm start
 ```
 
-Default polling interval is `10000ms`.
-
-### 5. Subscribe in Telegram
+### 6. Subscribe
 
 Open [@NOXA_AlertBot](https://t.me/NOXA_AlertBot) and press `Start`.
 
-You will get:
+Expected reply:
 
-- a confirmation that you are on the alert list
-- change alerts for `noxa.fi`
-- outage and recovery alerts
-- `/stop` support to unsubscribe
+```text
+✅ You are now on the NOXA alert list.
+Website: https://noxa.fi/
+If the NOXA website changes,
+you will receive an instant alert here.
 
-## Example alert
+Send /stop to unsubscribe.
+```
+
+## Example change alert
 
 ```text
 🚨 NOXA website update detected
@@ -127,89 +108,90 @@ npm run test-alert
 npm start
 ```
 
-- `doctor` — prints resolved config and discovered env files
-- `init` — saves the initial baseline
-- `check` — runs a single fetch-and-compare cycle
-- `test-alert` — sends a Telegram test message
-- `start` — starts the continuous watcher loop
+- `doctor` — show resolved config
+- `init` — create first baseline
+- `check` — run one check
+- `test-alert` — send test message
+- `start` — run watcher loop
 
 ## Configuration
 
-Core settings:
+Core:
 
-- `WATCH_URL` — target site. Default: `https://noxa.fi/`
-- `WATCH_MODE` — `dom`, `text`, or `html`
-- `POLL_INTERVAL_MS` — polling interval. Default: `10000`
-- `REQUEST_TIMEOUT_MS` — fetch timeout. Default: `15000`
-- `STATE_DIR` — state and snapshots directory. Default: `.data`
-- `ENV_DISCOVERY` — auto-load nearby `.env` files. Default: `true`
+- `WATCH_URL`  
+  default: `https://noxa.fi/`
+- `WATCH_MODE`  
+  values: `dom`, `text`, `html`
+- `POLL_INTERVAL_MS`  
+  default: `10000`
+- `REQUEST_TIMEOUT_MS`  
+  default: `15000`
+- `STATE_DIR`  
+  default: `.data`
+- `ENV_DISCOVERY`  
+  default: `true`
 
-Telegram settings:
+Telegram:
 
-- `TELEGRAM_BOT_TOKEN` — required bot token
-- `TELEGRAM_CHAT_ID` — optional fixed chat, group, or channel id
-- `TELEGRAM_THREAD_ID` — optional forum topic id
-- `TELEGRAM_BROADCAST_SUBSCRIBERS` — broadcast to `/start` subscribers
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
+- `TELEGRAM_THREAD_ID`
+- `TELEGRAM_BROADCAST_SUBSCRIBERS`
 
-Optional tuning:
+Tuning:
 
-- `SEND_STARTUP_PING` — send a startup Telegram message
-- `IGNORE_HTML_REGEX` — remove noisy HTML fragments before hashing
-- `IGNORE_TEXT_REGEX` — remove noisy text fragments before hashing
+- `SEND_STARTUP_PING`
+- `IGNORE_HTML_REGEX`
+- `IGNORE_TEXT_REGEX`
 
 ## Watch modes
 
-`WATCH_MODE=dom`
+`dom`
 
-- best default for most sites
-- hashes normalized HTML
-- catches structure and content changes while ignoring scripts/styles/comments
+- good default
+- tracks structure and content
 
-`WATCH_MODE=text`
+`text`
 
-- best if you only care about visible text changes
-- good for “coming soon → live” transitions
+- only visible text
+- good for launch pages
 
-`WATCH_MODE=html`
+`html`
 
-- strictest mode
-- any raw HTML change will trigger
+- strict mode
+- any raw HTML change triggers
 
-## False positives and tuning
+## False positives
 
-Some pages change small noisy fragments on every request: timestamps, rotating counters, hydration ids, or build markers.
+If the site changes small noisy parts on every request,
+add ignore rules.
 
-Use the ignore rules when that happens.
-
-Single rule:
+Examples:
 
 ```bash
 IGNORE_TEXT_REGEX=Last updated:.*
 ```
 
-Multiple rules:
-
 ```bash
 IGNORE_TEXT_REGEX=Last updated:.*||Build #[0-9]+
-IGNORE_HTML_REGEX=data-hydration="[^"]+"||nonce="[^"]+"
 ```
-
-Slash-delimited regex is also supported:
 
 ```bash
-IGNORE_TEXT_REGEX=/last updated:.*/gi
+IGNORE_HTML_REGEX=data-hydration=\"[^\"]+\"
 ```
 
-Practical advice:
+Tips:
 
-- start with `WATCH_MODE=text` if you only care about visible copy
-- add ignore rules only after you observe noise
-- keep rules narrow so you do not hide real changes
-- run `npm run check` after each tuning change
+- start with `WATCH_MODE=text`
+- add rules only when needed
+- keep rules narrow
+- run `npm run check` after changes
 
-## State and snapshots
+## State
 
-State is stored in:
+Files are stored in `.data/`.
+
+Example:
 
 ```text
 .data/
@@ -220,33 +202,13 @@ State is stored in:
     2026-07-22T12-00-00-000Z.txt
 ```
 
-This gives you:
-
-- the active baseline hash
-- last successful check time
-- latest snapshot paths
-- the raw HTML snapshot
-- extracted text used for diffing
-- the Telegram subscriber list
-
 ## Telegram setup
 
 1. Create a bot with `@BotFather`
 2. Put the token into `.env`
 3. Run `npm run test-alert`
-4. If you want a fixed admin or group destination, add `TELEGRAM_CHAT_ID`
-5. If you want public opt-in alerts, let users press `Start`
-6. When a user presses `Start`, the bot confirms the subscription in English
-
-Expected `/start` confirmation:
-
-```text
-✅ You are now on the NOXA alert list.
-Website: https://noxa.fi/
-If the NOXA website changes, you will receive an instant alert here.
-
-Send /stop to unsubscribe.
-```
+4. Press `Start` in Telegram
+5. Wait for alerts
 
 ## Docker
 
@@ -265,43 +227,42 @@ docker run --rm \
   noxa-site-alert
 ```
 
-Or use compose:
+Compose:
 
 ```bash
 docker compose up -d
 ```
 
-## VPS deploy in 3 minutes
+## VPS deploy
 
 ```bash
 git clone https://github.com/Semak12345/noxa-site-alert.git
 cd noxa-site-alert
 cp .env.example .env
+npm install
+npm run init
+npm start
 ```
 
-Fill in your bot token, then:
+For systemd install:
 
 ```bash
-sudo mkdir -p /opt/noxa-site-alert
-sudo rsync -a --delete ./ /opt/noxa-site-alert/
-cd /opt/noxa-site-alert
 sudo bash scripts/install-vps.sh
 sudo systemctl start noxa-site-alert
-sudo systemctl status noxa-site-alert
 ```
 
-Useful commands after deploy:
+Logs:
 
 ```bash
-sudo systemctl restart noxa-site-alert
 sudo journalctl -u noxa-site-alert -f
 ```
 
-## Monorepo-friendly env discovery
+## Monorepo env discovery
 
-If this watcher lives inside a larger workspace, it can auto-load nearby `.env` and `.env.local` files from parent folders and common sibling app folders such as `frontend/`.
+By default the project can load nearby `.env`
+and `.env.local` files from parent folders.
 
-If you want strict local-only config:
+To disable it:
 
 ```bash
 ENV_DISCOVERY=false
@@ -309,19 +270,17 @@ ENV_DISCOVERY=false
 
 ## Use cases
 
-- launch page monitoring
-- startup landing pages
-- “coming soon” trackers
-- private alpha or allowlist watchers
-- small group alert bots
-- simple website proof-of-change monitoring
+- launch monitoring
+- landing page monitoring
+- private alert bot
+- proof-of-change tracking
 
 ## Contributing
 
-PRs are welcome. If you want to extend transports, tune diff behavior, or add deployment targets, open an issue or jump straight into a patch.
+PRs are welcome.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
