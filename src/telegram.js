@@ -122,9 +122,9 @@ async function syncSubscribers(config, subscribers) {
       config,
       chat.chatId,
       [
-        "✅ Subscribed to noxa-site-alert",
-        `Watching: ${config.watchUrl}`,
-        "You will receive alerts when the page changes.",
+        "✅ You are now on the NOXA alert list.",
+        `Website: ${config.watchUrl}`,
+        "If the NOXA website changes, you will receive an instant alert here.",
         "",
         "Send /stop to unsubscribe.",
       ].join("\n")
@@ -136,8 +136,8 @@ async function syncSubscribers(config, subscribers) {
       config,
       chat.chatId,
       [
-        "🛑 Unsubscribed from noxa-site-alert",
-        `Watching: ${config.watchUrl}`,
+        "🛑 You have been removed from the NOXA alert list.",
+        `Website: ${config.watchUrl}`,
         "Send /start anytime to subscribe again.",
       ].join("\n")
     );

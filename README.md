@@ -4,10 +4,13 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-7c3aed.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-0f172a.svg)](package.json)
 [![Telegram](https://img.shields.io/badge/alerts-Telegram-2563eb.svg)](https://telegram.org/)
+[![Live Bot](https://img.shields.io/badge/live%20bot-@NOXA__AlertBot-229ED9.svg)](https://t.me/NOXA_AlertBot)
 
 Open-source website change detection for `https://noxa.fi/` with Telegram alerts, stored snapshots, simple diffs, Docker support, and zero runtime dependencies beyond Node.js.
 
 It ships preconfigured for `noxa.fi`, but you can point it at any site and use it as a lightweight launch monitor, landing page watcher, or “tell me the second this page changes” bot.
+
+Live public bot: https://t.me/NOXA_AlertBot
 
 ![noxa-site-alert hero](assets/hero.svg)
 
@@ -87,7 +90,9 @@ Default polling interval is `10000ms`.
 
 ### 4. Subscribe from Telegram
 
-Open the bot and press `Start`.
+Open the live bot and press `Start`:
+
+https://t.me/NOXA_AlertBot
 
 From that point:
 
@@ -98,11 +103,13 @@ From that point:
 ## Example alert
 
 ```text
-🚨 noxa-site-alert detected a change
-URL: https://noxa.fi/
-Mode: dom
-Time: 2026-07-22T16:19:25.000Z
+🚨 NOXA website update detected
+News: Changes were detected on noxa.fi.
+Website: https://noxa.fi/
+Open site: https://noxa.fi/
+Detected at: 2026-07-22T16:19:25.000Z
 Title: Noxa
+Mode: dom
 
 Added:
 + Available now

@@ -241,9 +241,11 @@ function makeHealthyState(config, site, snapshots) {
 
 function buildChangeMessage(config, previousState, nextState, site, diff) {
   const parts = [
-    "🚨 noxa.fi changed",
-    `URL: ${config.watchUrl}`,
-    `Detected: ${site.fetchedAt}`,
+    "🚨 NOXA website update detected",
+    "News: Changes were detected on noxa.fi.",
+    `Website: ${config.watchUrl}`,
+    `Open site: ${config.watchUrl}`,
+    `Detected at: ${site.fetchedAt}`,
     site.title ? `Title: ${site.title}` : null,
     `Mode: ${config.watchMode}`,
     `Previous hash: ${shortHash(previousState.currentHash)}`,
