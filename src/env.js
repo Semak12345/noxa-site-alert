@@ -67,7 +67,8 @@ function loadEnvFiles(startDir) {
   const originalKeys = new Set(Object.keys(process.env));
   const loadedFiles = [];
   const sourcesByKey = {};
-  const discoveryEnabled = readBool(process.env.ENV_DISCOVERY, true);
+  const bootstrapDiscovery = readDiscoveryPreference(startDir, process.env.ENV_DISCOVERY);
+  const discoveryEnabled = readBool(bootstrapDiscovery, true);
 
   if (!discoveryEnabled) {
     return {
@@ -119,3 +120,21 @@ function readBool(value, fallback) {
 module.exports = {
   loadEnvFiles,
 };
+
+function readDiscoveryPreference(startDir, explicitValue) {
+  if (explicitValue != null && explicitValue !== "") {
+    return explicitValue;
+  }
+
+  const localCandidates = [path.join(startDir, ".env"), path.join(startDir, ".env.local")];
+
+  for (const filePath of localCandidates) {
+    if (!fs.existsSync(filePath)) continue;
+    const parsed = parseEnvFile(fs.readFileSync(filePath, "utf8"));
+    if (Object.prototype.hasOwnProperty.call(parsed, "ENV_DISCOVERY")) {
+      return parsed.ENV_DISCOVERY;
+    }
+  }
+
+  return undefined;
+}
